@@ -59,18 +59,23 @@ const RadioBox = styled.div`
 `;
 
 const AddTransactionView = (props) => {
-  const [amount, setAmount] = useState();
-  const [desc, setDesc] = useState();
+  const [amount, setAmount] = useState("");
+  const [desc, setDesc] = useState("");
   const [type, setType] = useState("EXPENSE");
+  const [showError, setShowError] = useState(false);
 
   const addTransaction = () => {
-    props.addTransaction({
-      amount: Number(amount),
-      desc,
-      type,
-      id: Date.now(),
-    });
-    props.toggleAddTxn();
+    if (amount.length === 0 || desc.length === 0) {
+      setShowError(true);
+    } else {
+      props.addTransaction({
+        amount: Number(amount),
+        desc,
+        type,
+        id: Date.now(),
+      });
+      props.toggleAddTxn();
+    }
   };
 
   return (
@@ -107,7 +112,9 @@ const AddTransactionView = (props) => {
         <label htmlFor="income">Income</label>
       </RadioBox>
       <AddTransaction onClick={addTransaction}>Add Transaction</AddTransaction>
-      {amount && desc ? addTransaction() : "First Complete a formallity"}
+      {showError && (amount.length === 0 || desc.length === 0) && (
+        <p>First off all Complete a formallity</p>
+      )}
     </AddTransactionContainer>
   );
 };
